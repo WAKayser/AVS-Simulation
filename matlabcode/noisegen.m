@@ -7,10 +7,9 @@ function [ noisesignal ] = noisegen(cleansignal, dB)
 %   The second dimension will be the y and x components
 %   the third dimension will be the index of the AVS
     
-    avsnum = size(cleansignal, 3);
     noisesignal = zeros(size(cleansignal));
-    for avs = 1:avsnum
-        for channel = 1:2
+    for avs = 1:size(cleansignal, 3)
+        for channel = 1:size(cleansignal, 2)
             noisesignal(:,channel,avs) = awgn(cleansignal(:,channel, avs), dB);
         end
     end
