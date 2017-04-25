@@ -8,7 +8,7 @@ if delay + duration > length
     throw(ME)
 end
 
-samplerate = 340 * 100;
+samplerate = 1360 * 100;
 t = 0:1/samplerate:duration;
 cosine = cos(2 * pi * t * freq);
 before = zeros(1, delay * samplerate);
