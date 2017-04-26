@@ -1,4 +1,4 @@
-function [eventsignal] = eventgen(delay, duration, freq, length, amplitude)
+function [eventsignal] = eventgen(delay, duration, freq, amplitude, length)
 %EVENTGEN generate different types of events
 %   There are two types of event impulse and sinusoidal
 
