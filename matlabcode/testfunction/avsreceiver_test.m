@@ -5,8 +5,8 @@ function avsreceiver_test
 E1 = eventgen(0.25,0.25,50,1,1);
 E2 = eventgen(0.375,0.25,0,1,1);
 
-Z1 = locationtransform(500+2000j, E1);
-Z2 = locationtransform(2000+800j, E2);
+Z1 = transform(500+2000j, E1);
+Z2 = transform(2000+800j, E2);
 Y = (noisegen(Z1 + Z2, 100));
 
 [pressure, A] = avsreceiver(Y, pi/5, 16, 0.5);

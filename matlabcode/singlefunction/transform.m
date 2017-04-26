@@ -1,4 +1,4 @@
-function [Z] = locationtransform(transform, sourcesignal)
+function [Z] = transform(transform, sourcesignal)
 %LOCATIONTRANSFORM Transform signal from source to AVS data
 %   Determine what the AVS will receive. 
 %   transform vector is of form [x, y] and starts at AVS
