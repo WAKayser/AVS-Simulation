@@ -6,6 +6,11 @@ function [ N ] = noisegen(Z, dB)
 %   The first dimension will be time
 %   The second dimension will be the y and x components
 %   the third dimension will be the index of the AVS
-    N = awgn(Z, dB);
+    N = zeros(size(Z));
+    for i = 1:size(Z, 2)
+        for j = 1:size(Z, 3)
+            N(:,i,j) = awgn(Z(:,i,j), dB);
+        end
+    end
 end
 

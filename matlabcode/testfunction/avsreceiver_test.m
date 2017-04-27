@@ -1,37 +1,31 @@
 function avsreceiver_test
 %AVSRECEIVER_TEST Summary of this function goes here
 %   Detailed explanation goes here
+avsdata(:,:,1) = create_array(0, 50, 2, pi, 0);
+avsdata(:,:,2) = create_array(5000, 50, 2, 0, pi);
 
-E1 = eventgen(0.25,0.25,50,1,1);
-E2 = eventgen(0.375,0.25,0,1,1);
+eventdata(1) = struct('type','pulse','delay',0.25,'duration',0.1,'amplitude',1, 'freq', 0, 'location', 500+200j);
+eventdata(2) = struct('type','cosine','delay',0.5,'duration',0.1,'amplitude',1, 'freq', 20, 'location', 2000+800j);
 
-Z1 = transform(500+2000j, E1);
-Z2 = transform(2000+800j, E2);
-Y = (noisegen(Z1 + Z2, 100));
-
-[pressure, A] = avsreceiver(Y, pi/5, 16, 0.5);
+E = eventgen_multi(eventdata, 1);
+Z = transform_multi(eventdata, avsdata, E);
+N = noisegen(Z, 100);
+[P, A] = avsreceiver_multi(N, avsdata);
 
 subplot(2,2,1);
-plot(E1);
+plot(real(A(:,1,1)));
 hold on;
-plot(E2);
-title('Events at their location')
-
+plot(imag(A(:,1,1)));
 subplot(2,2,2);
-plot(real(Y));
+plot(real(A(:,1,2)));
 hold on;
-plot(imag(Y));
-title('Noisy signal')
-
+plot(imag(A(:,1,2)));
 subplot(2,2,3);
-plot(pressure);
-title('Pressure data')
-
-subplot(2,2,4);
-plot(real(A));
+plot(real(A(:,2,1)));
 hold on;
-plot(imag(A));
-title('Vector data')    
-
+plot(imag(A(:,2,1)));
+subplot(2,2,4);
+plot(real(A(:,2,2)));
+hold on;
+plot(imag(A(:,2,2)));
 end
-
