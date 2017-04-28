@@ -9,7 +9,7 @@ eventdata(2) = struct('type','cosine','delay',0.5,'duration',0.1,'amplitude',1, 
 
 E = eventgen_multi(eventdata, 1);
 Z = transform_multi(eventdata, avsdata, E);
-N = noisegen(Z, 200);
+N = noisegen(Z, 75);
 [P, A] = avsreceiver_multi(N, avsdata);
 D = avsdspmodule_multi(P, A, avsdata)
 
