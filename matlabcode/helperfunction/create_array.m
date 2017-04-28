@@ -6,7 +6,7 @@ function avsdata = create_array(start, step, number, orientation, change)
         avsdata(i).orientation = orientation + change * (i-1);
         avsdata(i).bitdepth = 16;
         avsdata(i).scalepres = 1;
-        avsdata(i).scalevec = 1;
+        avsdata(i).scalevec = 420;
     end
 end
 
