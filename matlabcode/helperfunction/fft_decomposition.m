@@ -6,7 +6,7 @@ function [Y, fas, tas] = fft_decomposition(x, Fs, d, ms, enable)
     %d = overlap coefficient
     %ms = length of segment
 
-    subplot(311)
+    subplot(221)
     hold off;
     plot(real(x));
     hold on;
@@ -22,7 +22,7 @@ function [Y, fas, tas] = fft_decomposition(x, Fs, d, ms, enable)
         Super(:,k) = x(begin : begin + segment - 1); %Fill each row of Super with the local segmnet
     end
     
-    subplot(312)
+    subplot(222)
     Y = fftshift(fft(Super),1); %Shift FFT output to be able to recreate plot in frequency domain
     fas = (-1/2 * Fs : Fs/segment : 1/2 * Fs); %Create frequency axis
     tas = (0: ms*10^-3 : (1/d)*(overlappingsegments-1)* ms * 10^-3); %Create time axis.

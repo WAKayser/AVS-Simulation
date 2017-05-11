@@ -6,7 +6,10 @@ function detected = avsdspmodule(pressure, A, avsdata)
     treshold = 100 * abs(mean(mean(Y)))
     [row, col] = find(abs(Y) > treshold);
     size(row)
-    subplot(313)
+    subplot(223);
+    plot(abs(xcorr(A)))
+    
+    subplot(224)
     t = [];
     f = [];
     for i = 1:size(row, 1)
