@@ -1,11 +1,15 @@
 function eventgen_test
-    eventdata(1) = struct('type','pulse','delay',0.25,'duration',0.1,'amplitude',1, 'freq', 0, 'location', 500+200j);
-    eventdata(2) = struct('type','cosine','delay',0.5,'duration',0.1,'amplitude',1, 'freq', 20, 'location', 2000+800j);
-    event_wave = eventgen_multi(eventdata, 1);
+    load train.mat;
+
+    eventdata(1) = struct('type','pulse','delay',0.25,'duration',0.1,'amplitude',1, 'freq', 0, 'exty', 0,'extfs', 0, 'location', 500+200j);
+    eventdata(2) = struct('type','cosine','delay',0.5,'duration',0.1,'amplitude',1, 'freq', 20, 'exty', 0,'extfs', 0, 'location', 2000+800j);
+    eventdata(3) = struct('type','whitenoise','delay',0.5,'duration',0.1,'amplitude',1, 'freq', 20, 'exty', 0,'extfs', 0, 'location', 2000+800j);
+    eventdata(4) = struct('type','external','delay',0.5,'duration',0.1,'amplitude',1, 'freq', 20, 'exty', y,'extfs', Fs, 'location', 2000+800j);
+
+    event_wave = eventgen_multi(eventdata, 4);
     
-    subplot(2, 1, 1);
-    plot(event_wave(:, 1))
-    
-    subplot(2, 1, 2);
-    plot(event_wave(:, 2))
+    for i = 1:4
+        subplot(2, 2, i);
+        plot(event_wave(:, i))
+    end
 end
