@@ -16,17 +16,12 @@ function visualize(inputArray, Fs, plotSize, sampleSize, eventVec, midFreqEst, b
 
      subplot(4,1,4)
      tas = (1:plotSize)./Fs;     
+     hold on;
      plot(tas,inputArray(1:plotSize))
-
-     hold on
-
      % eventVec filtering
      tas2 = (1:length(eventVec))./Fs;     
      eventVec(eventVec==0) = nan ;
-
-     subplot(4,1,4)
      plot(tas2,eventVec,'x')
-
 
 end
 
