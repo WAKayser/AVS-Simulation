@@ -15,9 +15,19 @@ function [eventsignal] = eventgen(eventdata, duration)
     end
     
     % Windowing %
+    modifier = ones(size(signal));
+    if isfield(eventdata, 'up')
+        modifier(1:eventdata.up*samplerate) = linspace(0,1,eventdata.up*samplerate);
+    end
+    
+    if isfield(eventdata, 'down')
+        modifier(end-eventdata.down*samplerate+ 1:end) = linspace(1,0,eventdata.down*samplerate);
+    end
     
     % Create delays
+    size(signal)
+    size(modifier)
     before = zeros(1, eventdata.delay * samplerate);
     after = zeros(1, (duration *samplerate) - length(before) - length(signal));
-    eventsignal = [before signal after];
+    eventsignal = [before signal.*modifier after];
 end
