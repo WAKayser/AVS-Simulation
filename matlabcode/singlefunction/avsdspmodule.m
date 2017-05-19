@@ -44,6 +44,10 @@ function [eventVec, peakMatrix, timeStamp] = avsdspmodule(P, A)
         % get new sample
         shortWindow = P(longSize+1 + x * shortSize : longSize + (x+1) * shortSize);
     end
+    if isempty(timeStamp)
+        timeStamp = nan;
+        peakMatrix = nan;
+    end
 end
 
     
