@@ -12,7 +12,7 @@ function [eventVec, midFreqEst, bwEst, highPeaks, startEvent] = duringEvent(samp
     bwEst = bwEstimate(samplePower, bwFactor, sampleSize, Fs);
 
      % multiple signal detection, second try
-    [~, highPeaks] = multiDetection(samplePower, threshold, startFactor, sampleSize, Fs);
+    [~, highPeaks] = multiDetection(samplePower, threshold, endFactor, sampleSize, Fs);
 
     % event end decision
    % if sum(samplePower)/sampleSize^2 < threshold * endFactor

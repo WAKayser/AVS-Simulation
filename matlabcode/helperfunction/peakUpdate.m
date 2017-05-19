@@ -1,15 +1,14 @@
 function [peakMatrix, peakVector] = peakUpdate(peakMatrix, peakVector, peaks)
-    lastRow = length(peakMatrix(:,end));
-
+    peakMatrix(end + 1, 1) = 0;
     for i = 1:length(peaks)
-        for j = 1:length(peakVector)
-            if peaks(i) == peakVector(j)
-                peakMatrix(lastRow + 1, j) = peaks(i);
-                break
-            elseif j == length(peakVector)
-                peakVector(j) = peaks(i);
-                peakVector(j+1) = 0;
-            end
+        index = find(peakVector==peaks(i))
+        if index
+            peakMatrix(end, index) = peaks(i)
+            test = 'dit doet hij vaker'
+        else %toevoegen aan peakVector
+            peakVector(end+1) = peaks(i)
+            peakMatrix(end, length(peakVector)) = peaks(i)
+            test = 'dit doet hij een keer'
         end
     end
 end
