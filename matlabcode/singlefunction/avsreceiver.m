@@ -1,11 +1,11 @@
-function [pressure, A] = avsreceiver(Z, avsdata)
+function [pressure, A] = avsreceiver(Z, Pz, avsdata)
 %AVSRECEIVER takes the complex_signals and computes the value returned by
 %   the AVS,
 %This will be implemented very simply, but should be extended for the 
 %   particular sensor. 
     R = Z * exp(-1j*avsdata.orientation);
     A = round(R, ceil(log10(2^avsdata.bitdepth)));
-    pressure = avsdata.scalepres * (real(A) + imag(A));
+    pressure = round(avsdata.scalepres * Pz, ceil(log10(2^avsdata.bitdepth)));
     A = A * avsdata.scalevec / 420;
 end
 

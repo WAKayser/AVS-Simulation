@@ -1,10 +1,10 @@
-function [eventVec, peakMatrix, timeStamp] = avsdspmodule_multi(P, A)
+function [eventVec, peakMatrix, timeStamp] = avsdspmodule_multi(P, A, DSPparam)
 %AVSDSPMODULE_MULTI Summary of this function goes here
 %   Detailed explanation goes here
     
     for i = 1:size(P, 2)
         for j = 1:size(P, 3)
-            [eventVec(:,i,j), peakMatrix(:,:,i,j), timeStamp(:,i,j)] = avsdspmodule(P(:,i,j), A(:,i,j));
+            [eventVec(:,i,j), peakMatrix(:,i,j), timeStamp(:,i,j)] = avsdspmodule(P(:,i,j), A(:,i,j), DSPparam);
         end
     end
 end

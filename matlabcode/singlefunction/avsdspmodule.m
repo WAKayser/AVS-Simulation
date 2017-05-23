@@ -1,14 +1,7 @@
-function [eventVec, peakMatrix, timeStamp] = avsdspmodule(P, A)
+function [eventVec, peakMatrix, timeStamp] = avsdspmodule(P, A, DSPparam)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
-
-    longSize = 1000;                     % LTA parameter
-    shortSize = 200;                      % STA parameter
-    startFactor = 5;                       % event > threshold * factor
-    endFactor = 3;                         % event end < threshold * endFactor
-
-    % Other parameters and initializations
-    bwFactor = 0.9;                        % used for BW estimates
+    
     Fs = 16000;
 
     startEvent = 0;
@@ -21,29 +14,35 @@ function [eventVec, peakMatrix, timeStamp] = avsdspmodule(P, A)
     threshold = 0;
 
         % Window and sample initialization
-    longWindow = P(1:longSize);
-    shortWindow = P(longSize+1 : longSize+shortSize);
+    longWindow = P(1:DSPparam.long);
+    shortWindow = P(DSPparam.long+1 : DSPparam.long+DSPparam.short);
     x = 0;
-    while(length(P) > longSize + (x+2)*shortSize)
-        x = x + 1;
+    while(length(P) > DSPparam.long + (x+2)*DSPparam.short)
         % detection and threshold update
-        eventVec(x*shortSize + longSize) = 0;
+        eventVec(x*DSPparam.short + DSPparam.long) = 0;
         if startEvent == 0 % Not during event
-            [threshold, startEvent, sevent] = eventDetection(longWindow, shortWindow, startFactor);
-            eventVec(x*shortSize + longSize) = sevent;
+            [threshold, startEvent, sevent] = eventDetection(longWindow, shortWindow, DSPparam.stFac);
+            eventVec(x*DSPparam.short + DSPparam.long) = sevent;
         end
         if startEvent == 1 % During Event
-            [eevent, midFreqEst(x), bwEst(x), highPeaks, startEvent] = duringEvent(shortWindow, Fs, shortSize, threshold, endFactor, bwFactor, startFactor);        
+            [eevent, midFreqEst(x+1), bwEst(x+1), highPeaks, startEvent] = duringEvent(shortWindow, Fs, DSPparam.short, threshold, DSPparam.endFac, DSPparam.bwFac, DSPparam.stFac);        
             [peakMatrix, peakVector] = peakUpdate(peakMatrix, peakVector, highPeaks);
-            timeStamp = [timeStamp; (longSize + (x) * shortSize) / Fs];
-            eventVec(x*shortSize + longSize) = eventVec(x*shortSize + longSize) + eevent;
+            timeStamp = [timeStamp; (DSPparam.long + x * DSPparam.short) / Fs];
+            eventVec(x*DSPparam.short + DSPparam.long) = eventVec(x*DSPparam.short + DSPparam.long) + eevent;
         end
        
-        longWindow = longWindow([shortSize + 1 : end 1 : shortSize]);
-        longWindow(longSize - shortSize + 1 : longSize) = shortWindow;
+        longWindow = longWindow([DSPparam.short + 1 : end 1 : DSPparam.short]);
+        longWindow(DSPparam.long - DSPparam.short + 1 : DSPparam.long) = shortWindow;
         % get new sample
-        shortWindow = P(longSize+1 + x * shortSize : longSize + (x+1) * shortSize);
+        x = x + 1;
+        shortWindow = P(DSPparam.long+1 + x * DSPparam.short : DSPparam.long + (x+1) * DSPparam.short);
     end
+    if isempty(timeStamp)
+        timeStamp = nan;
+        peakMatrix = nan;
+    end
+    peakMatrix = num2cell(peakMatrix,[1,2]);
+    timeStamp = num2cell(timeStamp,[1]);
 end
 
     
