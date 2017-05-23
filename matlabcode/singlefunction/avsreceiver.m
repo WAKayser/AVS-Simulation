@@ -5,7 +5,7 @@ function [pressure, A] = avsreceiver(Z, avsdata)
 %   particular sensor. 
     R = Z * exp(-1j*avsdata.orientation);
     A = round(R, ceil(log10(2^avsdata.bitdepth)));
-    pressure = avsdata.scalepres * (real(A) + imag(A));
+    pressure = avsdata.scalepres * abs(A);
     A = A * avsdata.scalevec / 420;
 end
 
