@@ -22,6 +22,9 @@ function [eventVec, peakMatrix, timeStamp] = avsdspmodule(P, A, DSPparam)
         eventVec(x*DSPparam.short + DSPparam.long) = 0;
         if startEvent == 0 % Not during event
             [threshold, startEvent, sevent] = eventDetection(longWindow, shortWindow, DSPparam.stFac);
+            if length(sevent) ~= 1
+                sevent
+            end
             eventVec(x*DSPparam.short + DSPparam.long) = sevent;
         end
         if startEvent == 1 % During Event

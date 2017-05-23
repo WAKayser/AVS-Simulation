@@ -19,12 +19,13 @@ for i = 1:length(eventdata(1,:))
     detection(i).stopdiff = nan;
     
     for j = 1:length(detectStart)
-        
         if abs(eventStart(i) - detectStart(j)) < param.start
             %disp(['Event ' num2str(i) ' start detected'])
             detection(i).startdiff = eventStart(i) - detectStart(j);
             succescount = succescount +1;
         end
+    end
+    for j= 1:length(detectStop)
         if abs(eventStop(i) - detectStop(j)) < param.stop
             %disp(['Event ' num2str(i) ' stop detected'])
             detection(i).stopdiff = detectStop(j) - eventStop(i);
