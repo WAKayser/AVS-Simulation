@@ -1,4 +1,4 @@
-function [pressure, A] = avsreceiver_multi(Z, avsdata)
+function [pressure, A] = avsreceiver_multi(Z, Pz, avsdata)
 %AVSRECEIVER_MULTI Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -7,7 +7,7 @@ function [pressure, A] = avsreceiver_multi(Z, avsdata)
 
     for i = 1:size(avsdata, 2)
         for j = 1:size(avsdata, 3)
-            [pressure(:,i,j), A(:,i,j)] = avsreceiver(Z(:,i,j), avsdata(:,i,j));
+            [pressure(:,i,j), A(:,i,j)] = avsreceiver(Z(:,i,j), Pz(:,i,j), avsdata(:,i,j));
         end
     end
 end
