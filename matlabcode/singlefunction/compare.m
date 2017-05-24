@@ -1,4 +1,4 @@
-function [detection, succescount]=compare(avsdata, eventdata, eventVec, peakMatrix, param)
+function [detection, falsePos]=compare(avsdata, eventdata, eventVec, peakMatrix, param)
 
     Fs = 16000;
     detectStart=[];
@@ -7,7 +7,7 @@ function [detection, succescount]=compare(avsdata, eventdata, eventVec, peakMatr
     detectStop = (find (eventVec == -0.1))./Fs;
     detectFreq = unique(peakMatrix);
     detection = [];
-    succescount = 0;
+    falsePos = 0;
 
 for i = 1:length(eventdata(1,:))
     eventStart(i) = eventdata(1,i).delay + abs(eventdata(:,i).location-avsdata.location)/343;
@@ -18,17 +18,22 @@ for i = 1:length(eventdata(1,:))
     detection(i).startdiff = nan;
     detection(i).stopdiff = nan;
     
+    %%
     for j = 1:length(detectStart)
         if abs(eventStart(i) - detectStart(j)) < param.start
             %disp(['Event ' num2str(i) ' start detected'])
             detection(i).startdiff = eventStart(i) - detectStart(j);
-            succescount = succescount +1;
+            detectStart(j) = [];
+            break;
         end
     end
+
     for j= 1:length(detectStop)
         if abs(eventStop(i) - detectStop(j)) < param.stop
             %disp(['Event ' num2str(i) ' stop detected'])
             detection(i).stopdiff = detectStop(j) - eventStop(i);
+            detectStop(j) = [];
+            break;
         end
     end
     for j = 1:length(detectFreq)
@@ -38,7 +43,8 @@ for i = 1:length(eventdata(1,:))
         end
     end
 end 
-    succescount = succescount / length(eventdata(1,:));
+
+    falsePos = length(detectStart);
 end
 
     
