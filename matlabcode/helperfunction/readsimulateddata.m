@@ -1,8 +1,9 @@
-function [ detected ] = readsimulateddata( filename )
+function data = readsimulateddata( filename )
 %READSIMULATEDDATA Summary of this function goes here
 %   Detailed explanation goes here
     fileID = fopen(filename, 'r');
-    detected = fscanf(fileID, "%d\n");
+    event = fscanf(fileID, "%d %d\n");
+    data = reshape(event, [], 16000);
     fclose(fileID);
 end
 
