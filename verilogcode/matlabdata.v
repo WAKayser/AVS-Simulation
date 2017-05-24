@@ -1,28 +1,24 @@
 module matlabdata ();
 
-	reg clock, reset;
+  reg clock, reset;
   reg signed [15:0] vectorx, vectory, pressure;
   
-  wire signed [15:0] dingetje;
+  wire dingetje;
 
   integer in, statusI, out;
   
-  // umts_top umts_top(.clock(clock), .reset(reset),
-  //       .sample_i(sample_i), .sample_q(sample_q),
-  //       .frame(frame), .strobe(strobe));
 
-  dspstub dspstub(.clock(clock), .reset(reset), 
-  					.vectorx(vectorx), .vectory(vectory), .pressure(pressure),
-  					.dingetje(dingetje));
-  
+topLevel topLevel (
+.clock(clock),
+.reset(reset),
+.stream(pressure),
+.eventDetected(dingetje)
+);
+
   initial begin
     clock = 1;
     reset = 1;
     
-    #10 reset = 0;
-  end
-  
-  initial begin
     {vectorx, vectory, pressure} = 0;
     #100 reset = 0;
     in  = $fopen("../testbenchfiles/testdata.dat", "r");
@@ -32,7 +28,7 @@ module matlabdata ();
       $fwrite(out, "%d\n", dingetje);
     end 
     $fclose(in);
-    $finish;
+    $stop;
   end
   
   always #5 clock = !clock;
