@@ -16,4 +16,4 @@ system('vsim -do ../docodesvsim/runsim.do');
 
 dingetje = readsimulateddata('../testbenchfiles/detected.dat');
 subplot(212);
-plot(dingetje);
+plot(dingetje(2,:) * 125);
