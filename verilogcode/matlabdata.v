@@ -20,7 +20,7 @@ module matlabdata ();
 			.reset(reset),
 			.enable(devent),
 			.datain(pressure),
-			.freqbin(freqbin));
+			.smooth(freqbin));
 
 	initial begin
 		clock = 1;

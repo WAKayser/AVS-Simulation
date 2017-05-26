@@ -1,4 +1,4 @@
-module dfswt(clock, reset, enable, datain, freqbin);
+module dfswt(clock, reset, enable, datain, smooth);
 
   parameter points = 8;
   parameter log = 3;
@@ -6,7 +6,8 @@ module dfswt(clock, reset, enable, datain, freqbin);
   input clock, reset, enable;
   
   input signed [15:0] datain;
-  output reg signed [log-2:0] freqbin;
+  reg signed [log-2:0] freqbin;
+  output signed [log-2:0] smooth;
    
   wire signed [31:0] mag [points/2:0];
   reg signed [31:0] highacc;
@@ -37,4 +38,11 @@ module dfswt(clock, reset, enable, datain, freqbin);
       end
     end
   end
+
+  smoother #(log-1) smoother(
+    .clock(clock),
+    .reset(reset | !enable),
+    .datain(freqbin),
+    .dataout(smooth));
+
 endmodule 
