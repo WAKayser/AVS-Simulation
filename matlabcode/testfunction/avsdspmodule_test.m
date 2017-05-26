@@ -52,10 +52,10 @@ function avsdspmodule_test
     eventVec(eventVec(:,1,2)==0,1,2) = nan;
     plot(tas2,eventVec(:,1,2),'x')
 
-    peakMatrix1 = cell2mat(peakMatrix(1))
-    peakMatrix2 = cell2mat(peakMatrix(2))
-    timeStamp1 = cell2mat(timeStamp(1))
-    timeStamp2 = cell2mat(timeStamp(2))
+    peakMatrix1 = cell2mat(peakMatrix(1));
+    peakMatrix2 = cell2mat(peakMatrix(2));
+    timeStamp1 = cell2mat(timeStamp(1));
+    timeStamp2 = cell2mat(timeStamp(2));
    
     subplot(223)
     plot(timeStamp1, peakMatrix1(1:end,:,1,1));   

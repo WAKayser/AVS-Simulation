@@ -1,4 +1,4 @@
-function [eventVec, midFreqEst, bwEst, highPeaks, startEvent] = duringEvent(sample, Fs, sampleSize, threshold, endFactor, bwFactor, startFactor)
+function [eventVec, midFreqEst, highPeaks, startEvent] = duringEvent(sample, Fs, sampleSize, threshold, endFactor, startFactor)
 % Estimates BW and frequency components when an event is detected.
 
     fDomSample = fft(sample);
@@ -9,7 +9,7 @@ function [eventVec, midFreqEst, bwEst, highPeaks, startEvent] = duringEvent(samp
     midFreqEst = (maxIndex-1)*Fs/(sampleSize);
 
     % BW estimation
-    bwEst = bwEstimate(samplePower, bwFactor, sampleSize, Fs);
+    %bwEst = bwEstimate(samplePower, bwFactor, sampleSize, Fs);
 
      % multiple signal detection, second try
     [~, highPeaks] = multiDetection(samplePower, threshold, endFactor, sampleSize, Fs);
