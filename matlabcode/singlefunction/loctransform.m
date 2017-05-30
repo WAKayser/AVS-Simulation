@@ -5,7 +5,7 @@ function [Z, Pz] = loctransform(transvec, sourcesignal)
 
     delay = floor(abs(transvec) / (343 / 272000));
     loss = abs(transvec) * 1; % simple aproximation of loss
-    sigdelay = [zeros(delay, 1); sourcesignal(1:end-delay)] / loss;
-    Pz = sigdelay(1:17:end);
-    Z = Pz * transvec / abs(transvec);
+    sigdelay = [zeros(floor(delay(1)/17), 1); sourcesignal(1:17:end-delay(1))] ./ loss';
+    % Pz = sigdelay(1:17:end);
+    Z = sigdelay * transvec / abs(transvec);
 end

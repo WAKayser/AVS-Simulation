@@ -13,14 +13,15 @@ function avsdspmodule_test
     %%
     %Create AVS arrays and their measured data
     avsdata(:,:,1) = create_array(0, 0, 1, pi, 0);
-    avsdata(:,:,2) = create_array(10, 1, 1, 0, pi);
-    eventdata(1) = struct('type','cosine','delay',0.2,'duration',0.1,'amplitude',1, 'freq', 6000, 'location', 20);
-    eventdata(2) = struct('type','cosine','delay',0.7,'duration',0.15,'amplitude',1, 'freq', 394, 'location', 20);
-    eventdata(3) = struct('type','cosine','delay',0.4,'duration',0.2,'amplitude',1, 'freq', 3000, 'location', 15+15j);
+    % avsdata(:,:,2) = create_array(10, 1, 1, 0, pi);
+    eventdata(1) = struct('type','cosine','delay',0.2,'duration',0.1,'amplitude',20, 'freq', 1000, 'location', 20);
+    % eventdata(2) = struct('type','cosine','delay',0.7,'duration',0.15,'amplitude',1, 'freq', 394, 'location', 20);
+    % eventdata(3) = struct('type','cosine','delay',0.4,'duration',0.2,'amplitude',1, 'freq', 3000, 'location', 15+15j);
     E = eventgen_multi(eventdata, 1);
-    Z = transform_multi(eventdata, avsdata, E);
-    N = noisegen(Z, 50);
-    [P, A] = avsreceiver_multi(N, avsdata);
+    [Z, Pz] = transform_multi(eventdata, avsdata, E);
+    N = noisegen(Z, 100);
+    Pz = noisegen(Pz, 15);
+    [P, A] = avsreceiver_multi(N, Pz, avsdata);
     
     %%
     %Apply DSP to the AVS data
@@ -43,24 +44,24 @@ function avsdspmodule_test
     eventVec(eventVec(:,1,1)==0 ,1 ,1) = nan;
     plot(tas2,eventVec(:,1,1),'x')
     
-    subplot(222)
-    tas = (1:size(P(:, 1, 1)))./Fs;     
-    hold on;
-    plot(tas,P(:,1,2))
-    % eventVec filtering
-    tas2 = (1:length(eventVec(:,1,2)))./Fs;     
-    eventVec(eventVec(:,1,2)==0,1,2) = nan;
-    plot(tas2,eventVec(:,1,2),'x')
+%     subplot(222)
+%     tas = (1:size(P(:, 1, 1)))./Fs;     
+%     hold on;
+%     plot(tas,P(:,1,2))
+%     % eventVec filtering
+%     tas2 = (1:length(eventVec(:,1,2)))./Fs;     
+%     eventVec(eventVec(:,1,2)==0,1,2) = nan;
+%     plot(tas2,eventVec(:,1,2),'x')
 
     peakMatrix1 = cell2mat(peakMatrix(1));
-    peakMatrix2 = cell2mat(peakMatrix(2));
+%     peakMatrix2 = cell2mat(peakMatrix(2));
     timeStamp1 = cell2mat(timeStamp(1));
-    timeStamp2 = cell2mat(timeStamp(2));
+%     timeStamp2 = cell2mat(timeStamp(2));
    
     subplot(223)
     plot(timeStamp1, peakMatrix1(1:end,:,1,1));   
     
     subplot(224)
-    plot(timeStamp2, peakMatrix2(1:end,:,1,1));  
+%     plot(timeStamp2, peakMatrix2(1:end,:,1,1));  
 end
 
