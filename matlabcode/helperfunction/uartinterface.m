@@ -3,7 +3,7 @@ function [ result ] = uartinterface(pressure, port)
 %   Detailed explanation goes here
     UART = instrfind('Type', 'serial', 'Port', port, 'Tag', '');
     if isempty(UART)
-        UART = serial(port, 'BaudRate', 115200);
+        UART = serial(port, 'BaudRate', 460800);
 %     else
 %         fclose(UART);
     end
