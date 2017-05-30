@@ -5,7 +5,7 @@ function show_setup(eventdata, avsdata)
    
    legendInfo=[];
     for i = 1:size(eventdata,2)
-        plot(eventdata(:,i).location, 'o');
+        plot(complex(eventdata(:,i).location), 'o');
         type = eventdata(:,i).type;
             if strcmp(type, 'cosine')
                 legendInfo = [legendInfo; cellstr(['Event ' num2str(i) ', ' type ' ' num2str(eventdata(:,i).freq);])];

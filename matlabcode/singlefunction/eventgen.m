@@ -11,7 +11,10 @@ function [eventsignal] = eventgen(eventdata, duration)
     elseif strcmp(eventdata.type, 'whitenoise')
         signal = wgn(1, eventdata.duration*samplerate, 10 * log10(eventdata.amplitude));
     elseif strcmp(eventdata.type, 'external')
-        signal = (eventdata.amplitude * resample(eventdata.exty, samplerate, eventdata.extfs))'; %%%
+        signal = (eventdata.amplitude * resample(eventdata.exty, samplerate, eventdata.extfs))';
+    elseif strcmp(eventdata.type, 'variable')
+        t = 1/samplerate:1/samplerate:eventdata.duration;
+        signal = eventdata.amplitude * cos(2 * pi * t .* (eventdata.freq + eventdata.change * t));
     end
     
     % Windowing %
