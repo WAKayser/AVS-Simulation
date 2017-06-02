@@ -3,12 +3,13 @@ function [ result ] = uartinterface(pressure, port)
 %   Detailed explanation goes here
     UART = instrfind('Type', 'serial', 'Port', port, 'Tag', '');
     if isempty(UART)
-        UART = serial(port, 'BaudRate', 460800);
-%     else
-%         fclose(UART);
+        UART = serial(port, 'BaudRate', 500000);
+    else
+        fclose(UART);
     end
-    
-    fopen(UART(1));
+    UART = UART(1);
+    % uart magic die nog lang niet werkt
+    fopen(UART);
     fwrite(UART, pressure, 'int16', 'async');
     UART.InputBufferSize = 16000;
     readasync(UART);

@@ -23,28 +23,38 @@ function [eventVec, peakMatrix, timeStamp] = avsdspmodule(P, A, DSPparam)
         eventVec(x*DSPparam.short + DSPparam.long) = 0;
         if startEvent == 0 % Not during event
             [threshold, startEvent, sevent, prevDetect] = eventDetection(longWindow, shortWindow, DSPparam.stFac, prevDetect);
-            if length(sevent) ~= 1
-                sevent
-            end
+            % if length(sevent) ~= 1
+            %     sevent
+            % end
+            % update the eventvec to show the start of the event
             eventVec(x*DSPparam.short + DSPparam.long) = sevent;
         end
         if startEvent == 1 % During Event
+            % chech if the event is still busy
             [eevent, midFreqEst(x+1), highPeaks, startEvent] = duringEvent(shortWindow, Fs, DSPparam.short, threshold, DSPparam.endFac, DSPparam.stFac);        
+            % Determine the right frequencies
             [peakMatrix, peakVector] = peakUpdate(peakMatrix, peakVector, highPeaks);
+            % create time stamps for the events
             timeStamp = [timeStamp; (DSPparam.long + x * DSPparam.short) / Fs];
+            % create a stop event when the event stopped. 
             eventVec(x*DSPparam.short + DSPparam.long) = eventVec(x*DSPparam.short + DSPparam.long) + eevent;
         end
-       
+        
+        %% append the new shortwindow to the long window
         longWindow = longWindow([DSPparam.short + 1 : end 1 : DSPparam.short]);
+        
+        %% remove the oldest shortwindow from the longwindow
         longWindow(DSPparam.long - DSPparam.short + 1 : DSPparam.long) = shortWindow;
-        % get new sample
+        % Determine a newe shortwindow.
         x = x + 1;
         shortWindow = P(DSPparam.long+1 + x * DSPparam.short : DSPparam.long + (x+1) * DSPparam.short);
     end
+    % this is used to create the right size for plotting, without effecting it. 
     if isempty(timeStamp)
         timeStamp = nan;
         peakMatrix = nan;
     end
+    % cell usage because of the different sizes possible accross dspmodules
     peakMatrix = num2cell(peakMatrix,[1,2]);
     timeStamp = num2cell(timeStamp,[1]);
 end

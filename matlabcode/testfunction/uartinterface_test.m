@@ -9,8 +9,11 @@ N = noisegen(Z, 100);
 Pz = noisegen(Pz, 20);
 [P, A] = avsreceiver_multi(N, Pz, avsdata);
 
+%% This is only supported in newer versions 
+%% anc can be commented out, as it only gets the comport
 getfield(instrhwinfo('serial'), 'SerialPorts')
 
+%% most often this port is used
 port = 'COM3';
 
 result = uartinterface(P, port);
