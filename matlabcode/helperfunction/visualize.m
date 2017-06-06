@@ -1,6 +1,5 @@
 function visualize(inputArray, Fs, plotSize, sampleSize, eventVec, midFreqEst, bwEst, peakMatrix)
-%UNTITLED4 Summary of this function goes here
-%   Detailed explanation goes here
+%This is used in one of testfunctions to show what the      
 
     % data plots
      subplot(4,1,1)

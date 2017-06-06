@@ -1,11 +1,15 @@
 function show_setup(eventdata, avsdata)
 
 %SHOW_SETUP This is will be used to create top down view of 
-%   the arrays and the eventlocationsS
+%   the arrays and the eventlocations
+
+% it will also show some information in the legends
+% should be extended since the extended capabilities of eventgen. 
+% also does not show direction of avs. 
    
    legendInfo=[];
     for i = 1:size(eventdata,2)
-        plot(eventdata(:,i).location, 'o');
+        plot(complex(eventdata(:,i).location), 'o');
         type = eventdata(:,i).type;
             if strcmp(type, 'cosine')
                 legendInfo = [legendInfo; cellstr(['Event ' num2str(i) ', ' type ' ' num2str(eventdata(:,i).freq);])];

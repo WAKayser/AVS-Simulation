@@ -6,6 +6,9 @@ function [ N ] = noisegen(Z, dB)
 %   The first dimension will be time
 %   The second dimension will be the y and x components
 %   the third dimension will be the index of the AVS
+
+%	Should we extend the simulation to take into account correlated noise?
+
     N = zeros(size(Z));
     for i = 1:size(Z, 2)
         for j = 1:size(Z, 3)

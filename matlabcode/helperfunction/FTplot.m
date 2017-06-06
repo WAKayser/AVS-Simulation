@@ -5,6 +5,8 @@ function [G,t,f] = FTplot(x,Srate,Sdiv,zero_pad,time)
 
     Lx = length(x);
 
+    % Flexible setup for the ft plot
+    % can be used to overlap windows
     if nargin == 4
         xsize = [x,zeros(1,zero_pad-Lx)];
     elseif nargin == 5
@@ -15,11 +17,16 @@ function [G,t,f] = FTplot(x,Srate,Sdiv,zero_pad,time)
 
     Lxsize = length(xsize);
 
+    % Do the magic transforms
     y = reshape(xsize,Lxsize/Sdiv,[]);
-    G = fft(y,100000);
+    G = fftshitft(fft(y,100000), 1);
+
+    % Create the axis
     t = linspace(0,Lxsize/Srate,Sdiv*Lxsize/Srate);
     f = linspace(-Srate/2, Srate/2, Srate/Sdiv);
-    G = fftshift(G,1);
 
+    % Plot the picture
     imagesc(t,f,abs(G))
+
+    %also returns the data, so it can be used for analysis.
 end

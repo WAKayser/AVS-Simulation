@@ -1,6 +1,6 @@
 function [eventVec, peakMatrix, timeStamp] = avsdspmodule_multi(P, A, DSPparam)
-%AVSDSPMODULE_MULTI Summary of this function goes here
-%   Detailed explanation goes here
+%AVSDSPMODULE_MULTI very simple and used to calculated the associated values
+	% of multiple dspmodules. Mostly transparent
     
     for i = 1:size(P, 2)
         for j = 1:size(P, 3)

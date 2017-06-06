@@ -1,5 +1,6 @@
 function bwEst = bwEstimate(samplePower, bwFactor, sampleSize, Fs) % maxIndex,
 % BW estimation
+    % this function is not used. 
     bwTest = 0;
     th1 = 0;
     bwEst = 0;
