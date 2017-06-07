@@ -6,14 +6,12 @@ function [eventVec, peakMatrix, timeStamp] = avsdspmodule(P, A, DSPparam)
 
     startEvent = 0;
     eventVec = [];
-    %bwEst = [];
     midFreqEst = [];
     peakVector = [];
     peakMatrix = [];
     timeStamp = [];
     threshold = 0;
-    prevDetect = 0;
-
+    triggerCount = 0;
         % Window and sample initialization
     longWindow = P(1:DSPparam.long);
     shortWindow = P(DSPparam.long+1 : DSPparam.long+DSPparam.short);
@@ -22,17 +20,13 @@ function [eventVec, peakMatrix, timeStamp] = avsdspmodule(P, A, DSPparam)
         %detection and threshold update
         eventVec(x*DSPparam.short + DSPparam.long) = 0;
         if startEvent == 0 % Not during event
-            [threshold, startEvent, sevent, prevDetect] = eventDetection(longWindow, shortWindow, DSPparam.stFac, prevDetect);
-            % if length(sevent) ~= 1
-            %     sevent
-            % end
-            % update the eventvec to show the start of the event
-            eventVec(x*DSPparam.short + DSPparam.long) = sevent;
+            [threshold, startEvent, triggerCount] = eventDetection(longWindow, shortWindow, DSPparam.stFac, triggerCount, DSPparam.trig, threshold);
+            if startEvent == 1
+                eventVec((x - DSPparam.trig)*DSPparam.short + DSPparam.long ) = 0.1;
+            end
         end
         if startEvent == 1 % During Event
-            % chech if the event is still busy
-            [eevent, midFreqEst(x+1), highPeaks, startEvent] = duringEvent(shortWindow, Fs, DSPparam.short, threshold, DSPparam.endFac, DSPparam.stFac);        
-            % Determine the right frequencies
+            [eevent, highPeaks, startEvent] = duringEvent(shortWindow, Fs, DSPparam, threshold);        
             [peakMatrix, peakVector] = peakUpdate(peakMatrix, peakVector, highPeaks);
             % create time stamps for the events
             timeStamp = [timeStamp; (DSPparam.long + x * DSPparam.short) / Fs];

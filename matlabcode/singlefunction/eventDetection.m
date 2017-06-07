@@ -1,24 +1,19 @@
-function [threshold, startEvent, eventVec, prevDetect] = eventDetection(longWindow, shortWindow, startFactor, prevDetect)
+function [threshold, startEvent, triggerCount] = eventDetection(longWindow, shortWindow, startFactor, triggerCount, triggerNumber, threshold)
 % event start and threshold determination
-    % Detemine the LTA of the system. 
+    if triggerCount == 0 
     threshold = rms(longWindow)^2;
-    % check if the STA is higher than the treshold times a predetermined factor
-    % this has been chosen after many simulations. 
+    end
+    
     if rms(shortWindow)^2 > threshold * startFactor
-        % Simple state machine that implements rudimentary trigger counter of two. 
-        if prevDetect
-            % event has twice been detected
+        if triggerCount == triggerNumber
             startEvent = 1; 
-            eventVec = 0.1;% x event
-            prevDetect = 0;
+            triggerCount = 0;
         else
-            prevDetect = 1;
+            triggerCount = triggerCount + 1;
             startEvent = 0;
-            eventVec = 0;
         end
     else
         startEvent = 0;
-        eventVec = 0;
-        prevDetect = 0;
+        triggerCount = 0;
     end
 end

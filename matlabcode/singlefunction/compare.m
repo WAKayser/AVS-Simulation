@@ -7,8 +7,9 @@ function [detection, falsePos]=compare(avsdata, eventdata, eventVec, peakMatrix,
     detectStop = (find (eventVec == -0.1))./Fs;
     detectFreq = unique(peakMatrix);
     detection = [];
-    falsePos = 0;
-
+    falsePos.start = 0;
+    falsePos.freq = 0;
+    
 for i = 1:length(eventdata(1,:))
     eventStart(i) = eventdata(1,i).delay + abs(eventdata(:,i).location-avsdata.location)/343;
     eventStop(i) = eventStart(i) + eventdata(1,i).duration;
@@ -40,11 +41,13 @@ for i = 1:length(eventdata(1,:))
         if abs(eventFreq(i) - detectFreq(j)) < param.freq
             %disp(['Frequency ' num2str(detectFreq(j)) ' from event ' num2str(i) ' detected'])
            detection(i).freqdiff = eventFreq(i) - detectFreq(j);
+           detectFreq(j) = [];
+           break;
         end
     end
 end 
-
-    falsePos = length(detectStart);
+    falsePos.start = length(detectStart);
+    falsePos.freq = length(detectFreq);
 end
 
     
