@@ -15,12 +15,13 @@ Detect = [];
 %Parameters to be optimized
     DSPparam.short = 400;                       % STA parameter
     DSPparam.long = 5*DSPparam.short;           % LTA parameter
-    param.start = DSPparam.short./Fs;         % Error margin on start time
-    param.stop = DSPparam.short./Fs;          % Error margin on stop time
+    DSPparam.trig = 1;                          % Trigger number
+    DSPparam.freqFac = 5;
+    param.start = DSPparam.short./Fs;           % Error margin on start time
+    param.stop = DSPparam.short./Fs;            % Error margin on stop time
     param.freq = 1.5*Fs/DSPparam.short;         % Error margin on signal frequency
-    %DSPparam.bwFac = 0.9;                       % used for BW estimates
     
-    xasFac=1.17:0.01:1.22;
+    xasFac=1.18:0.01:1.22;
     figure
     for k = 1:1 %SNR values, amount of lines
         xasDb = [xasDb; k-1];
@@ -29,11 +30,11 @@ Detect = [];
             Detect(l,k) = 0;
             DSPparam.stFac = xasFac(l);                         % event > threshold * factor
             DSPparam.endFac = xasFac(l);                        % event end < threshold * endFactor
-            for j = 1:2000
+            for j = 1:100
                 P(:,1,k) = noisegen(E, xasDb(k));
                 [eventVec, peakMatrix, timeStamp] = avsdspmodule_multi(P(:,1,k), A, DSPparam);
                 [detection(1,1,k), falsePos] = compare_multi(avsdata, eventdata, eventVec, peakMatrix, param);
-                FP(j,l,k) = falsePos;                
+                FP(j,l,k) = falsePos.start;                
             end
             plotFP(l,k) = mean(FP(:,l,k));
         end

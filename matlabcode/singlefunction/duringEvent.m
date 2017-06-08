@@ -1,22 +1,13 @@
-function [eventVec, midFreqEst, highPeaks, startEvent] = duringEvent(sample, Fs, sampleSize, threshold, endFactor, startFactor)
-% Estimates BW and frequency components when an event is detected.
+function [eventVec, highPeaks, startEvent] = duringEvent(sample, Fs, DSPparam, threshold)
+% Estimates frequency components when an event is detected.
 
-    fDomSample = fft(sample);
-    samplePower = fDomSample.*conj(fDomSample);
-
-    % frequency estimation
-    [~, maxIndex] = max(samplePower);
-    midFreqEst = (maxIndex-1)*Fs/(sampleSize);
-
-    % BW estimation
-    %bwEst = bwEstimate(samplePower, bwFactor, sampleSize, Fs);
-
-     % multiple signal detection, second try
-    [~, highPeaks] = multiDetection(samplePower, threshold, endFactor, sampleSize, Fs);
+    freqSample = abs(fft(sample));
+    freqSample = freqSample([1 : length(sample)/2]);
+    sampleMean = mean(freqSample);
+    highPeaks = (find(freqSample > sampleMean*DSPparam.freqFac)-1)*Fs/DSPparam.short;
 
     % event end decision
-   % if sum(samplePower)/sampleSize^2 < threshold * endFactor
-    if (rms(sample)^2 < threshold * endFactor)
+    if (rms(sample)^2 < threshold * DSPparam.endFac)
         startEvent = 0;
         eventVec = -0.1;          % x end event
     else 
