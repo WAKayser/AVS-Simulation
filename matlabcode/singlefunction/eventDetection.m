@@ -1,7 +1,7 @@
 function [threshold, startEvent, triggerCount] = eventDetection(longWindow, shortWindow, startFactor, triggerCount, triggerNumber, threshold)
 % event start and threshold determination
-    if triggerCount == 0 
-    threshold = rms(longWindow)^2;
+    if ~triggerCount
+        threshold = rms(longWindow)^2;
     end
     
     if rms(shortWindow)^2 > threshold * startFactor

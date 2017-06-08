@@ -14,9 +14,9 @@ E = eventgen_multi(eventdata, 3);
 %E = zeros(Fs*1000, 1);
 
 [Z, Pz] = transform_multi(eventdata, avsdata, E);
-N = noisegen(Z, -2);
+N = noisegen(Z, 20);
 %A=1;
-Pz = noisegen(Pz, -2);
+Pz = noisegen(Pz, 20);
 [P, A] = avsreceiver_multi(N, Pz, avsdata);
 %show_setup(eventdata,avsdata);
 
@@ -24,7 +24,7 @@ Pz = noisegen(Pz, -2);
     %Give DSP parameters and detection margins
     DSPparam.long = 2000;                       % LTA parameter
     DSPparam.short = 400;                       % STA parameter
-    DSPparam.trig = 1;                          % Trigger number
+    DSPparam.trig = 10;                          % Trigger number
     DSPparam.stFac = 1.22;                         % event > threshold * factor
     DSPparam.endFac = 1.22;                        % event end < threshold * endFactor
     DSPparam.freqFac = 5;                       % used for detecting peaks

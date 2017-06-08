@@ -4,7 +4,7 @@ function [eventVec, peakMatrix, timeStamp] = avsdspmodule(P, A, DSPparam)
     
     Fs = 16000;
 
-    startEvent = 0;
+    event = 0;
     eventVec = [];
     midFreqEst = [];
     peakVector = [];
@@ -12,37 +12,24 @@ function [eventVec, peakMatrix, timeStamp] = avsdspmodule(P, A, DSPparam)
     timeStamp = [];
     threshold = 0;
     triggerCount = 0;
-        % Window and sample initialization
-    longWindow = P(1:DSPparam.long);
-    shortWindow = P(DSPparam.long+1 : DSPparam.long+DSPparam.short);
-    x = 0;
-    while(length(P) > DSPparam.long + (x+2)*DSPparam.short)
-        %detection and threshold update
-        eventVec(x*DSPparam.short + DSPparam.long) = 0;
-        if startEvent == 0 % Not during event
-            [threshold, startEvent, triggerCount] = eventDetection(longWindow, shortWindow, DSPparam.stFac, triggerCount, DSPparam.trig, threshold);
-            if startEvent == 1
-                eventVec((x - DSPparam.trig)*DSPparam.short + DSPparam.long ) = 0.1;
-            end
-        end
-        if startEvent == 1 % During Event
-            [eevent, highPeaks, startEvent] = duringEvent(shortWindow, Fs, DSPparam, threshold);        
+    % Window and sample initialization
+    long = DSPparam.long;
+    short = DSPparam.short;
+    % long window P(index:long+index)
+    % short window P(index+long:index+long+short)
+    
+    for index = long+1:(size(P, 1) - short)
+        if ~event
+            [threshold, event, triggerCount] = eventDetection(P(index - long:index), P(index:index+short), DSPparam.stFac, triggerCount, DSPparam.trig, threshold);
+            eventVec(index) = 0.1 * event;
+        else
+            [eevent, highPeaks, event] = duringEvent(P(index:index+short), Fs, DSPparam, threshold); 
             [peakMatrix, peakVector] = peakUpdate(peakMatrix, peakVector, highPeaks);
-            % create time stamps for the events
-            timeStamp = [timeStamp; (DSPparam.long + x * DSPparam.short) / Fs];
-            % create a stop event when the event stopped. 
-            eventVec(x*DSPparam.short + DSPparam.long) = eventVec(x*DSPparam.short + DSPparam.long) + eevent;
+            timeStamp = [timeStamp; index / Fs];
+            eventVec(index) = eevent;
         end
-        
-        %% append the new shortwindow to the long window
-        longWindow = longWindow([DSPparam.short + 1 : end 1 : DSPparam.short]);
-        
-        %% remove the oldest shortwindow from the longwindow
-        longWindow(DSPparam.long - DSPparam.short + 1 : DSPparam.long) = shortWindow;
-        % Determine a newe shortwindow.
-        x = x + 1;
-        shortWindow = P(DSPparam.long+1 + x * DSPparam.short : DSPparam.long + (x+1) * DSPparam.short);
     end
+
     % this is used to create the right size for plotting, without effecting it. 
     if isempty(timeStamp)
         timeStamp = nan;
