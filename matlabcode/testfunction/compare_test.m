@@ -1,6 +1,6 @@
 %function compare_test
 close all;
-clear all;
+clear;
 %%
 %Create sensor data and AVS
 %False positive test, 1 sec no events
@@ -22,9 +22,10 @@ Pz = noisegen(Pz, 20);
 
     %%
     %Give DSP parameters and detection margins
+    DSPparam.Fs = Fs;
     DSPparam.long = 2000;                       % LTA parameter
     DSPparam.short = 400;                       % STA parameter
-    DSPparam.trig = 10;                          % Trigger number
+    DSPparam.trig = 20;                          % Trigger number
     DSPparam.stFac = 1.22;                         % event > threshold * factor
     DSPparam.endFac = 1.22;                        % event end < threshold * endFactor
     DSPparam.freqFac = 5;                       % used for detecting peaks
@@ -34,8 +35,7 @@ Pz = noisegen(Pz, 20);
     
     %%
     %Get detection results
-    [eventVec, peakMatrix, timeStamp] = avsdspmodule_multi(P, A, DSPparam);
+    [eventVec, peakMatrix] = avsdspmodule_multi(P, A, DSPparam);
     [detection, success] = compare_multi(avsdata, eventdata, eventVec, peakMatrix, param);
-     
-    detection_plot(detection, eventVec, peakMatrix, timeStamp, P)
+    detection_plot(detection, eventVec, peakMatrix, P)
 %end

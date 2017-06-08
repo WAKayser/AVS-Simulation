@@ -11,6 +11,8 @@ Reference = load('Ref.mat');
 Sweep2k3k45 = daqread('Sweep2k_3k_DOAneg45_30s.1.daq');
 %sin5k60 = daqread('Sinus_5k_DOAneg60_10s.1.daq');
 %%
+size(Sweep2k3k45)
+size(Reference.Ref)
 sig = [Sweep2k3k45; Reference.Ref]; %Select signal
 P = sig(1:end,1:4:end);
 A = 1;
@@ -25,8 +27,8 @@ DSPparam.trig = 2;                              % Trigger number
 DSPparam.stFac = 4;                          % event > threshold * factor
 DSPparam.endFac = 2;                         % event end < threshold * endFactor
 DSPparam.freqFac = 5;                           % used for detecting peaks
-param.start = DSPparam.short./DSPparam.Fs;      % Error margin on start time
-param.stop = DSPparam.short./DSPparam.Fs;       % Error margin on stop time
+param.start = 400;      % Error margin on start time
+param.stop = 2000;       % Error margin on stop time
 param.freq = DSPparam.Fs/DSPparam.short;        % Error margin on signal frequency
 param.Fs = DSPparam.Fs;
     
@@ -39,9 +41,8 @@ timeStamp=[];
 %[eventVec(:,1), peakMatrix, timeStamp] = avsdspmodule(P(:,1), A, DSPparam);
 %[detection, success] = compare(avsdata, eventdata, eventVec, cell2mat(peakMatrix), param);
 %detection_plot(detection, eventVec, peakMatrix, timeStamp, P(:,1))
-
 for k = 1:3
-    [eventVec(:,k), peakMatrix, timeStamp] = avsdspmodule(P(:,k), A, DSPparam);
-    [detection, success] = compare(avsdata, eventdata, eventVec(:,k), cell2mat(peakMatrix), param);
-    detection_plot(detection, eventVec(:,k), peakMatrix, timeStamp, P(:,k));
+    [eventVec(:,k), peakMatrix] = avsdspmodule(P(:,k), A, DSPparam);
+    [detection, ~] = compare(avsdata, eventdata, eventVec(:,k), cell2mat(peakMatrix), param);
+    detection_plot(detection, eventVec(:,k), peakMatrix, P(:,k));
 end
