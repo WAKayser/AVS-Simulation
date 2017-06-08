@@ -2,7 +2,7 @@ function detection_plot(detection, eventVec, peakMatrix, timeStamp, P)
     Freq=[];
     Start=[];
     Stop=[];
-    Fs = 16000;
+    Fs = 48000;
     
     for j = 1:size(detection, 3)
         for i = 1:size(detection, 2)
@@ -26,7 +26,11 @@ function detection_plot(detection, eventVec, peakMatrix, timeStamp, P)
             plot(tas,P(:,i,j));
             tas2 = (1:length(eventVec(:,i,j)))./Fs;     
             eventVec(eventVec(:,i,j)==0 ,i ,j) = nan;
+            eventVec(eventVec(:,i,j)==0.1 ,i ,j) = 0.01;
+            eventVec(eventVec(:,i,j)==-0.1 ,i ,j) = -0.01;
             plot(tas2,eventVec(:,i,j),'x') 
+            
+            %Plot 2
             PM = cell2mat(peakMatrix(1,i,j));
             TS = cell2mat(timeStamp(1,i,j));
             subplot(212)
