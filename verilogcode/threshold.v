@@ -1,15 +1,15 @@
 module threshold (
 clock,
 reset,
-freeze,					// koppel aan eventDetected
+freeze,
 longEnergy,
 TH
 );
 
 
 input wire clock, reset, freeze;
-input wire [63:0] longEnergy;
-output reg [63:0] TH;
+input wire signed [63:0] longEnergy;
+output reg signed [63:0] TH;
 
 
 always @ (posedge clock) begin
@@ -22,3 +22,4 @@ end
 
 
 endmodule
+
