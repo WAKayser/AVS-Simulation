@@ -18,9 +18,10 @@ function avsdspmodule_test
     eventdata(2) = struct('type','cosine','delay',0.7,'duration',0.15,'amplitude',1, 'freq', 394, 'location', 20);
     eventdata(3) = struct('type','cosine','delay',0.4,'duration',0.2,'amplitude',1, 'freq', 3000, 'location', 15+15j);
     E = eventgen_multi(eventdata, 1);
-    Z = transform_multi(eventdata, avsdata, E);
+    [Z, Pz] = transform_multi(eventdata, avsdata, E);
     N = noisegen(Z, 50);
-    [P, A] = avsreceiver_multi(N, avsdata);
+    Pn = noisegen(Pz, 50);
+    [P, A] = avsreceiver_multi(N, Pn, avsdata);
     
     %%
     %Apply DSP to the AVS data
