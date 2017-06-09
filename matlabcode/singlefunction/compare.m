@@ -1,11 +1,11 @@
-function [detection, falsePos]=compare(avsdata, eventdata, eventVec, peakMatrix, param)
+function [detection, falsePos]=compare(avsdata, eventdata, eventVec, peakVector, param)
 
     Fs = 16000;
     detectStart=[];
     detectStop=[];
     detectStart = (find (eventVec == 0.1))./Fs;
     detectStop = (find (eventVec == -0.1))./Fs;
-    detectFreq = unique(peakMatrix);
+    detectFreq = sort(peakVector);
     detection = [];
     falsePos.start = 0;
     falsePos.freq = 0;

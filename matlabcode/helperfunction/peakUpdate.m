@@ -1,9 +1,9 @@
 function [peakMatrix, peakVector] = peakUpdate(peakMatrix, peakVector, peaks, time)
 % This function is used to split all the estimated frequencies into their own 
     % eventcolumns. 
-
+    
     % Create another empty row
-    for i = 1:size(peaks)
+    for i = 1:length(peaks)
         % find if it is already in the matrix
         index = find(peakVector==peaks(i));
         % Add it to the same column

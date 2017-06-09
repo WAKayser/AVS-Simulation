@@ -42,7 +42,7 @@ timeStamp=[];
 %[detection, success] = compare(avsdata, eventdata, eventVec, cell2mat(peakMatrix), param);
 %detection_plot(detection, eventVec, peakMatrix, timeStamp, P(:,1))
 for k = 1:3
-    [eventVec(:,k), peakMatrix] = avsdspmodule(P(:,k), A, DSPparam);
-    [detection, ~] = compare(avsdata, eventdata, eventVec(:,k), cell2mat(peakMatrix), param);
+    [eventVec(:,k), peakMatrix, peakVector] = avsdspmodule(P(:,k), A, DSPparam);
+    [detection, ~] = compare(avsdata, eventdata, eventVec(:,k), peakVector, param);
     detection_plot(detection, eventVec(:,k), peakMatrix, P(:,k));
 end

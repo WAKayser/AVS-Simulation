@@ -1,4 +1,4 @@
-function [eventVec, peakMatrix] = avsdspmodule(P, A, DSPparam)
+function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
     
@@ -42,17 +42,19 @@ function [eventVec, peakMatrix] = avsdspmodule(P, A, DSPparam)
             RMSLTA = sqrt(MSLTA);
             longbegin = longend - long;
             [threshold, event, triggerCount] = eventDetection(RMSLTA, RMSSTA, DSPparam.stFac, triggerCount, DSPparam.trig, threshold);
-            eventVec(index) = 0.2 * event;
+            eventVec(index) = 0.1 * event;
+            k =0;
         end
         if event
-            eevent = 0;
             if ~k   
                 [eevent, highPeaks, event] = duringEvent(P(index:index+short), RMSSTA, MSSTA, DSPparam, threshold); 
-                k = short;
+                k = short -1;
+                [peakMatrix, peakVector] = peakUpdate(peakMatrix, peakVector, highPeaks, index);
+                eventVec(index) = eventVec(index) + eevent;
+            else
+                k = k - 1;
+                peakMatrix(index,:) =  peakMatrix(index-1,:);
             end
-            k = k - 1;
-            [peakMatrix, peakVector] = peakUpdate(peakMatrix, peakVector, highPeaks, index);
-            eventVec(index) = eventVec(index) + eevent;
         end
     end
     % this is used to create the right size for plotting, without effecting it. 
