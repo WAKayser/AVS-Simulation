@@ -24,7 +24,7 @@ function [eventVec, peakMatrix] = avsdspmodule(P, A, DSPparam)
     RMSLTA = rms(P(1:longend));
     MSSTA = RMSSTA^2;
     MSLTA = RMSLTA^2;
-    
+    k = 0;
     % 
     % long window P(index:long+index)
     % short window P(index+long:index+long+short)
@@ -45,7 +45,12 @@ function [eventVec, peakMatrix] = avsdspmodule(P, A, DSPparam)
             eventVec(index) = 0.2 * event;
         end
         if event
-            [eevent, highPeaks, event] = duringEvent(P(index:index+short), RMSSTA, MSSTA, DSPparam, threshold); 
+            eevent = 0;
+            if ~k   
+                [eevent, highPeaks, event] = duringEvent(P(index:index+short), RMSSTA, MSSTA, DSPparam, threshold); 
+                k = short;
+            end
+            k = k - 1;
             [peakMatrix, peakVector] = peakUpdate(peakMatrix, peakVector, highPeaks, index);
             eventVec(index) = eventVec(index) + eevent;
         end
