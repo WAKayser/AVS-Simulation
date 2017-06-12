@@ -10,7 +10,10 @@ Reference = load('Ref.mat');
 %Droneheenweer = daqread('Droneflying_heenweer_30s.1.daq');
 Sweep2k3k45 = daqread('Sweep2k_3k_DOAneg45_30s.1.daq');
 %sin5k60 = daqread('Sinus_5k_DOAneg60_10s.1.daq');
-%%
+%%FILT
+
+antinoise = load('antinoise.mat');
+
 size(Sweep2k3k45)
 size(Reference.Ref)
 sig = [Sweep2k3k45; Reference.Ref]; %Select signal
@@ -26,7 +29,7 @@ DSPparam.short = DSPparam.Fs/40;                % STA parameter
 DSPparam.trig = 2;                              % Trigger number
 DSPparam.stFac = 4;                          % event > threshold * factor
 DSPparam.endFac = 2;                         % event end < threshold * endFactor
-DSPparam.freqFac = 5;                           % used for detecting peaks
+DSPparam.freqFac = 50;                           % used for detecting peaks
 param.start = 400;      % Error margin on start time
 param.stop = 2000;       % Error margin on stop time
 param.freq = DSPparam.Fs/DSPparam.short;        % Error margin on signal frequency
@@ -42,7 +45,8 @@ timeStamp=[];
 %[detection, success] = compare(avsdata, eventdata, eventVec, cell2mat(peakMatrix), param);
 %detection_plot(detection, eventVec, peakMatrix, timeStamp, P(:,1))
 for k = 1:3
-    [eventVec(:,k), peakMatrix, peakVector] = avsdspmodule(P(:,k), A, DSPparam);
+    F(:,k) = filter(antinoise.antinoise, P(:,k));
+    [eventVec(:,k), peakMatrix, peakVector] = avsdspmodule(F(:,k), A, DSPparam);
     [detection, ~] = compare(avsdata, eventdata, eventVec(:,k), peakVector, param);
-    detection_plot(detection, eventVec(:,k), peakMatrix, P(:,k));
+    detection_plot(detection, eventVec(:,k), peakMatrix, F(:,k));
 end

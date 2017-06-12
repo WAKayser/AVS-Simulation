@@ -6,6 +6,7 @@ function [eventVec, highPeaks, startEvent] = duringEvent(sample, RMSSTA, MSSTA, 
     sampleMean = mean(freqSample);
     highPeaks = (find(freqSample > sampleMean*DSPparam.freqFac)-1)*DSPparam.Fs/DSPparam.short;
 
+    % highPeaks = highPeaks(highPeaks > 500);
     % event end decision
     if (RMSSTA < threshold * DSPparam.endFac)
         startEvent = 0;

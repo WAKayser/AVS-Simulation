@@ -22,18 +22,18 @@ function detection_plot(detection, eventVec, peakMatrix, P)
             subplot(211)
             tas = (1:size(P(:, i, j)))./Fs;     
             hold on;
-            plot(tas,P(:,i,j));
+            plot(tas(1:10:end),P(1:10:end,i,j));
             tas2 = (1:length(eventVec(:,i,j)))./Fs;     
             eventVec(eventVec(:,i,j)==0 ,i ,j) = nan;
             eventVec(eventVec(:,i,j)==0.1 ,i ,j) = 0.01;
             eventVec(eventVec(:,i,j)==-0.1 ,i ,j) = -0.01;
-            plot(tas2,eventVec(:,i,j),'x') 
+            plot(tas2(1:10:end),eventVec(1:10:end,i,j),'x') 
             
             %Plot 2
             PM = cell2mat(peakMatrix(1,i,j));
             subplot(212)
             TS = (1:size(PM, 1)) ./ Fs;
-            plot(TS, PM(1:end,:,1));   
+            plot(TS(1:10:end), PM(1:10:end,:,1));   
         end
      end
 end
