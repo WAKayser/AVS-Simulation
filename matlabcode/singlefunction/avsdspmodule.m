@@ -11,7 +11,7 @@ function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
     threshold = 0;
     triggerCount = 0;
     % Window and sample initialization
-    long = DSPparam.long
+    long = DSPparam.long;
     short = DSPparam.short;
     
     longbegin = 1;
@@ -54,6 +54,7 @@ function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
     % this is used to create the right size for plotting, without effecting it. 
     % cell usage because of the different sizes possible accross dspmodules
     peakMatrix = num2cell(peakMatrix,[1,2]);
+    peakVector = num2cell(peakVector,[1,2]);
 end
 
     

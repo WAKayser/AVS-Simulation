@@ -41,7 +41,7 @@ function [eventsignal] = eventgen(eventdata, duration)
     end
     
     %% Create delays
-    before = zeros(1, eventdata.delay * samplerate);
+    before = zeros(1, floor(eventdata.delay * samplerate));
     after = zeros(1, (duration *samplerate) - length(before) - length(signal));
     eventsignal = [before signal.*modifier after];
 end

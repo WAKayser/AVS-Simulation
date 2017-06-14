@@ -7,9 +7,9 @@ load('antinoise.mat')
 %False positive test, 1 sec no events
 Fs = 48000;
 avsdata(:,:,1) = create_array(0, 0, 1, pi/2, 0); 
-eventdata(1) = struct('type','cosine','delay',0.3,'duration',0.5,'amplitude', sqrt(2), 'freq',400, 'location', 1);
-eventdata(2) = struct('type','cosine','delay',0.5,'duration',1,'amplitude',sqrt(2), 'freq',4763, 'location', 1);
-eventdata(3) = struct('type','pulse','delay',2,'duration',0.1,'amplitude',2, 'freq',2577, 'location', 1);
+eventdata(1) = struct('type','cosine','delay',0.3,'duration',0.5,'amplitude', sqrt(2), 'freq', 10000, 'location', 1);
+eventdata(2) = struct('type','cosine','delay',0.9,'duration',1,'amplitude',sqrt(2), 'freq', 5000, 'location', 1);
+eventdata(3) = struct('type','pulse','delay',2.2,'duration',0.1,'amplitude',sqrt(3), 'freq', 0, 'location', 1);
 E = eventgen_multi(eventdata, 3);
 %E = E(1:17:end,:,:);
 %E = zeros(Fs*1000, 1);
@@ -30,7 +30,7 @@ Pz = noisegen(Pz, 14, 2);
     DSPparam.trig = 80;                          % Trigger number
     DSPparam.stFac = 2;                         % event > threshold * factor
     DSPparam.endFac = 1.5;                        % event end < threshold * endFactor
-    DSPparam.freqFac = 30;                       % used for detecting peaks
+    DSPparam.freqFac = 25;                       % used for detecting peaks
     param.start = DSPparam.short./Fs;         % Error margin on start time
     param.stop = DSPparam.short./Fs;          % Error margin on stop time
     param.freq = Fs/DSPparam.short;             % Error margin on signal frequency

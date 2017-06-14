@@ -2,7 +2,7 @@
 
 close all;
 clear all;
-Fs = 16000;
+Fs = 48000;
 %False positive test, 1 sec no events
 avsdata(:,:,1) = create_array(0, 0, 1, pi/2, 0); 
 eventdata(1) = struct('type','cosine','delay',0,'duration',0,'amplitude',0, 'freq', 0, 'location', 0);
@@ -11,17 +11,19 @@ A = 1;
 xasFac = [];
 xasDb = [];
 Detect = [];
-%%
-%Parameters to be optimized
-    DSPparam.short = 400;                       % STA parameter
-    DSPparam.long = 5*DSPparam.short;           % LTA parameter
-    DSPparam.trig = 1;                          % Trigger number
-    DSPparam.freqFac = 5;
-    param.start = DSPparam.short./Fs;           % Error margin on start time
-    param.stop = DSPparam.short./Fs;            % Error margin on stop time
-    param.freq = 1.5*Fs/DSPparam.short;         % Error margin on signal frequency
+    %%
+    %Give DSP parameters and detection margins
+    DSPparam.Fs = Fs;
+    DSPparam.long = Fs/8;                       % LTA parameter
+    DSPparam.short = Fs/40;                       % STA parameter
+    DSPparam.trig = 50;                          % Trigger number
+    DSPparam.freqFac = 20;                       % used for detecting peaks
+    param.start = DSPparam.short./Fs;         % Error margin on start time
+    param.stop = DSPparam.short./Fs;          % Error margin on stop time
+    param.freq = Fs/DSPparam.short;             % Error margin on signal frequency
+    param.Fs = DSPparam.Fs;
     
-    xasFac=1.18:0.01:1.22;
+    xasFac=1.5:0.01:1.6;
     figure
     for k = 1:1 %SNR values, amount of lines
         xasDb = [xasDb; k-1];
@@ -30,9 +32,9 @@ Detect = [];
             Detect(l,k) = 0;
             DSPparam.stFac = xasFac(l);                         % event > threshold * factor
             DSPparam.endFac = xasFac(l);                        % event end < threshold * endFactor
-            for j = 1:100
-                P(:,1,k) = noisegen(E, xasDb(k));
-                [eventVec, peakMatrix, timeStamp] = avsdspmodule_multi(P(:,1,k), A, DSPparam);
+            for j = 1:10
+                P(:,1,k) = noisegen(E, xasDb(k), 2);
+                [eventVec, peakMatrix, peakVector] = avsdspmodule_multi(P(:,1,k), A, DSPparam);
                 [detection(1,1,k), falsePos] = compare_multi(avsdata, eventdata, eventVec, peakMatrix, param);
                 FP(j,l,k) = falsePos.start;                
             end
