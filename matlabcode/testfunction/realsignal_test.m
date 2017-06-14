@@ -13,7 +13,7 @@ Droneheenweer = daqread('Droneflying_heenweer_30s.1.daq');
 %%FILT
 
 antinoise = load('antinoise.mat');
-
+    
 size(Sweep2k3k45)
 size(Reference.Ref)
 sig = [Sweep2k3k45; Reference.Ref]; %Select signal

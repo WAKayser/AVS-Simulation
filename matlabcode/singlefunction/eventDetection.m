@@ -1,4 +1,4 @@
-function [threshold, startEvent, triggerCount] = eventDetection(RMSLTA, RMSSTA, startFactor, triggerCount, triggerNumber, threshold)
+function [threshold, event, triggerCount] = eventDetection(RMSLTA, RMSSTA, stFac, triggerCount, trig, threshold)
 % event start and threshold determination
     if ~triggerCount
         threshold = RMSLTA;
@@ -7,16 +7,16 @@ function [threshold, startEvent, triggerCount] = eventDetection(RMSLTA, RMSSTA, 
 %     startFactor = startFactor
 %     RMSSTA = RMSSTA
     
-    if (RMSSTA) > threshold * startFactor
+    if (RMSSTA) > threshold * stFac
         if triggerCount == triggerNumber
-            startEvent = 1;
+            event = 1;
             triggerCount = 0;
         else
             triggerCount = triggerCount + 1;
-            startEvent = 0;
+            event = 0;
         end
     else
-        startEvent = 0;
+        event = 0;
         triggerCount = 0;
     end
 end

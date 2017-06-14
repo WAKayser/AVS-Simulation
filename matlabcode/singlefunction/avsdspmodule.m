@@ -13,7 +13,9 @@ function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
     % Window and sample initialization
     long = DSPparam.long;
     short = DSPparam.short;
-    
+    stFac = DSPparam.stFac;
+    trig = DSPparam.trig;
+    %load('antinoise.mat')
     longbegin = 1;
     longend = long;
     shortbegin = long;
@@ -35,7 +37,30 @@ function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
         if ~event
             MSLTA = MSLTA - MSLTA/long + P(index)^2/long;
             RMSLTA = sqrt(MSLTA);
-            [threshold, event, triggerCount] = eventDetection(RMSLTA, RMSSTA, DSPparam.stFac, triggerCount, DSPparam.trig, threshold);
+            %%
+            %[threshold, event, triggerCount] = eventDetection(RMSLTA, RMSSTA, stFac, triggerCount, trig, threshold);
+            
+            if ~triggerCount
+                threshold = RMSLTA;
+            end
+        %     threshold = threshold
+        %     startFactor = startFactor
+        %     RMSSTA = RMSSTA
+
+            if (RMSSTA) > threshold * stFac
+                if triggerCount == trig
+                    event = 1;
+                    triggerCount = 0;
+                else
+                    triggerCount = triggerCount + 1;
+                    event = 0;
+                end
+            else
+                event = 0;
+                triggerCount = 0;
+            end
+            
+            %%
             eventVec(index) = 0.1 * event;
             k =0;
         end
