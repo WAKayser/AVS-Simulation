@@ -25,7 +25,7 @@ function [ N ] = noisegen(Z, dB, version)
                 else
                     mode = 'complex';
                 end
-                N(:,i,j) = Z(:,i,j) + filter(noisecolor, wgn(size(Z, 1), dB, 1, mode));
+                N(:,i,j) = Z(:,i,j) + filter(noisecolor, wgn(size(Z, 1), 1, -dB, 1, mode, 'dBW'));
             elseif version == 1 % Plain white noise
                 N(:,i,j) = awgn(Z(:,i,j), dB);
             end
