@@ -13,6 +13,7 @@ function [eventsignal] = eventgen(eventdata, duration)
         signal = linspace(0,-1,samplerate*eventdata.duration / 4);
         signal = [signal linspace(-1,1,samplerate*eventdata.duration / 2)];
         signal = [signal linspace(1,0,samplerate*eventdata.duration / 4)];
+        signal = signal * eventdata.amplitude;
     elseif strcmp(eventdata.type, 'whitenoise')
         % this create a whitenoise source
         signal = wgn(1, eventdata.duration*samplerate, 10 * log10(eventdata.amplitude));

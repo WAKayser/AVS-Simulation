@@ -2,6 +2,7 @@
 close all;
 clear;
 %%
+load('antinoise.mat')
 %Create sensor data and AVS
 %False positive test, 1 sec no events
 Fs = 16000;
@@ -14,10 +15,11 @@ E = eventgen_multi(eventdata, 3);
 %E = zeros(Fs*1000, 1);
 
 [Z, Pz] = transform_multi(eventdata, avsdata, E);
-N = noisegen(Z, 20);
+N = noisegen(Z, 20, 2);
 %A=1;
-Pz = noisegen(Pz, 20);
+Pz = noisegen(Pz, 20, 2);
 [P, A] = avsreceiver_multi(N, Pz, avsdata);
+% plot(filter(antinoise, P))
 %show_setup(eventdata,avsdata);
 
     %%
@@ -26,8 +28,8 @@ Pz = noisegen(Pz, 20);
     DSPparam.long = 2000;                       % LTA parameter
     DSPparam.short = 400;                       % STA parameter
     DSPparam.trig = 10;                          % Trigger number
-    DSPparam.stFac = 2;                         % event > threshold * factor
-    DSPparam.endFac = 2;                        % event end < threshold * endFactor
+    DSPparam.stFac = 5;                         % event > threshold * factor
+    DSPparam.endFac = 1;                        % event end < threshold * endFactor
     DSPparam.freqFac = 20;                       % used for detecting peaks
     param.start = DSPparam.short./Fs;         % Error margin on start time
     param.stop = DSPparam.short./Fs;          % Error margin on stop time
@@ -37,5 +39,5 @@ Pz = noisegen(Pz, 20);
     %Get detection results
     [eventVec, peakMatrix] = avsdspmodule_multi(P, A, DSPparam);
     [detection, success] = compare_multi(avsdata, eventdata, eventVec, peakMatrix, param);
-    detection_plot(detection, eventVec, peakMatrix, P)
+    detection_plot(detection, eventVec * 10, peakMatrix, P)
 %end
