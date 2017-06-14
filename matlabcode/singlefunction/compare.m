@@ -1,6 +1,6 @@
 function [detection, falsePos]=compare(avsdata, eventdata, eventVec, peakVector, param)
 
-    Fs = 16000;
+    Fs = param.Fs;
     detectStart=[];
     detectStop=[];
     detectStart = (find (eventVec == 0.1))./Fs;

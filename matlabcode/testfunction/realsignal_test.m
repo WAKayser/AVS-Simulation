@@ -7,16 +7,16 @@ Reference = load('Ref.mat');
 %Metal60 = daqread('Metal_DOA60_10s.2.daq');
 %Impulse45 = daqread('Impulse_DOAneg45_10s.1.daq');
 %Drone90 = daqread('Drone_DOA90_10s.1.daq');
-%Droneheenweer = daqread('Droneflying_heenweer_30s.1.daq');
-Sweep2k3k45 = daqread('Sweep2k_3k_DOAneg45_30s.1.daq');
+Droneheenweer = daqread('Droneflying_heenweer_30s.1.daq');
+%Sweep2k3k45 = daqread('Sweep2k_3k_DOAneg45_30s.1.daq');
 %sin5k60 = daqread('Sinus_5k_DOAneg60_10s.1.daq');
 %%FILT
 
 antinoise = load('antinoise.mat');
 
-size(Sweep2k3k45)
-size(Reference.Ref)
-sig = [Sweep2k3k45; Reference.Ref]; %Select signal
+%size(Sweep2k3k45);
+size(Reference.Ref);
+sig = [Reference.Ref; Droneheenweer]; %Select signal
 P = sig(1:end,1:4:end);
 A = 1;
 
@@ -26,10 +26,10 @@ eventdata(1) = struct('type','cosine','delay',1,'duration',9 ,'amplitude', 0, 'f
 DSPparam.Fs = 48000;
 DSPparam.long = DSPparam.Fs/8;                  % LTA parameter
 DSPparam.short = DSPparam.Fs/40;                % STA parameter
-DSPparam.trig = 2;                              % Trigger number
+DSPparam.trig = 100;                              % Trigger number
 DSPparam.stFac = 4;                          % event > threshold * factor
 DSPparam.endFac = 2;                         % event end < threshold * endFactor
-DSPparam.freqFac = 50;                           % used for detecting peaks
+DSPparam.freqFac = 7;                           % used for detecting peaks
 param.start = 400;      % Error margin on start time
 param.stop = 2000;       % Error margin on stop time
 param.freq = DSPparam.Fs/DSPparam.short;        % Error margin on signal frequency

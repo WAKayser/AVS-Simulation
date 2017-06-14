@@ -27,7 +27,7 @@ function detection_plot(detection, eventVec, peakMatrix, P)
             eventVec(eventVec(:,i,j)==0 ,i ,j) = nan;
             eventVec(eventVec(:,i,j)==0.1 ,i ,j) = 0.01;
             eventVec(eventVec(:,i,j)==-0.1 ,i ,j) = -0.01;
-            plot(tas2(1:10:end),eventVec(1:10:end,i,j),'x') 
+            plot(tas2(1:1:end),eventVec(1:1:end,i,j),'x') 
             
             %Plot 2
             PM = cell2mat(peakMatrix(1,i,j));

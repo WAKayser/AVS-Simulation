@@ -1,7 +1,7 @@
 function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
-    
+     
     event = 0;
     eventVec = zeros(size(P, 1), 1);
     midFreqEst = [];
@@ -38,7 +38,7 @@ function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
         if ~event
             longend = index;
             LTA = LTA - P(longbegin)/long + P(longend)/long;
-            MSLTA = MSLTA - P(longbegin)/long + P(longend)/long;
+            MSLTA = MSLTA - P(longbegin)^2/long + P(longend)^2/long;
             RMSLTA = sqrt(MSLTA);
             longbegin = longend - long;
             [threshold, event, triggerCount] = eventDetection(RMSLTA, RMSSTA, DSPparam.stFac, triggerCount, DSPparam.trig, threshold);
