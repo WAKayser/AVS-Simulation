@@ -11,15 +11,13 @@ function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
     threshold = 0;
     triggerCount = 0;
     % Window and sample initialization
-    long = DSPparam.long;
+    long = DSPparam.long
     short = DSPparam.short;
     
     longbegin = 1;
     longend = long;
     shortbegin = long;
     shortend = long + short;
-    STA = mean(P(shortbegin:shortend));
-    LTA = mean(P(1:longend));
     RMSSTA = rms(P(shortbegin:shortend));
     RMSLTA = rms(P(1:longend));
     MSSTA = RMSSTA^2;
@@ -31,16 +29,12 @@ function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
     
     for index = long+1:(size(P, 1) - short)
         shortend = shortend + 1;
-        STA = STA - P(shortbegin)/short + P(shortend)/short;
         MSSTA = MSSTA - P(shortbegin)^2/short + P(shortend)^2/short;
         RMSSTA = sqrt(MSSTA);
         shortbegin = shortbegin + 1;
         if ~event
-            longend = index;
-            LTA = LTA - P(longbegin)/long + P(longend)/long;
-            MSLTA = MSLTA - P(longbegin)^2/long + P(longend)^2/long;
+            MSLTA = MSLTA - MSLTA/long + P(index)^2/long;
             RMSLTA = sqrt(MSLTA);
-            longbegin = longend - long;
             [threshold, event, triggerCount] = eventDetection(RMSLTA, RMSSTA, DSPparam.stFac, triggerCount, DSPparam.trig, threshold);
             eventVec(index) = 0.1 * event;
             k =0;

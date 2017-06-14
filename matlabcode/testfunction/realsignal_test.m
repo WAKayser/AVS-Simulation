@@ -14,10 +14,10 @@ Droneheenweer = daqread('Droneflying_heenweer_30s.1.daq');
 
 antinoise = load('antinoise.mat');
 
-%size(Sweep2k3k45);
-size(Reference.Ref);
-sig = [Reference.Ref; Droneheenweer]; %Select signal
-P = sig(1:end,1:4:end);
+size(Sweep2k3k45)
+size(Reference.Ref)
+sig = [Sweep2k3k45; Reference.Ref]; %Select signal
+P = sig(1:end,1:4:end); 
 A = 1;
 
 avsdata(:,:,1) = create_array(0, 0.05, 1, pi/2, 0);  %start, step, number, orientation, change
@@ -33,7 +33,6 @@ DSPparam.freqFac = 7;                           % used for detecting peaks
 param.start = 400;      % Error margin on start time
 param.stop = 2000;       % Error margin on stop time
 param.freq = DSPparam.Fs/DSPparam.short;        % Error margin on signal frequency
-param.Fs = DSPparam.Fs;
     
 eventVec=[];
 peakMatrix=[];
