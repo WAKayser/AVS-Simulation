@@ -1,7 +1,7 @@
 function [eventsignal] = eventgen(eventdata, duration)
 %EVENTGEN generate different types of events
 %   There are two types of event impulse and sinusoidal
-    samplerate = 272 * 1000;
+    samplerate = 272 * 1000 * 3;
     
     %% What type of event will be simulated
     if strcmp(eventdata.type, 'cosine')

@@ -1,6 +1,7 @@
 function [eventVec, highPeaks, startEvent] = duringEvent(sample, RMSSTA, MSSTA, DSPparam, threshold)
 % Estimates frequency components when an event is detected.
-
+    load('antinoise.mat')
+    sample = filter(antinoise, sample);
     freqSample = abs(fft(sample));
     freqSample = freqSample(1 : floor(length(sample)/2));
     sampleMean = mean(freqSample);
