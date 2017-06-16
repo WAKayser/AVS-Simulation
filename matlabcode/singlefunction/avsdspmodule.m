@@ -72,7 +72,12 @@ function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
                 freqSample = abs(fft(sample));
                 freqSample = freqSample(1 : floor(length(sample)/2));
                 sampleMean = mean(freqSample);
-                highPeaks = (find(freqSample > sampleMean*freqFac)-1)*Fs/FFTsize;
+                for l = 1:length(freqFac)
+                    highPeaks = (find(freqSample > sampleMean*freqFac(l))-1)*Fs/FFTsize;
+                    if highPeaks
+                        break;
+                    end
+                end
 
                 % highPeaks = highPeaks(highPeaks > 500);
                 % event end decision

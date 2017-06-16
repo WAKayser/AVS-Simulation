@@ -31,9 +31,11 @@ function detection_plot(detection, eventVec, peakMatrix, P)
             
             %Plot 2
             PM = cell2mat(peakMatrix(1,i,j));
+            PM(PM==0) = nan;
             subplot(212)
             TS = (1:size(PM, 1)) ./ Fs;
-            plot(TS(1:10:end), PM(1:10:end,:,1));   
+            plot(TS(1:10:end), PM(1:10:end,:,1), '*'); 
+            xlim([0 length(eventVec)/Fs])
         end
      end
 end
