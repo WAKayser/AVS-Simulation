@@ -38,7 +38,7 @@ Detect = [];
             for j = 1:100
                 P = noisegen(E, SNR(k),2);
                 [eventVec, ~, peakVector] = avsdspmodule(P, A, DSPparam);
-                [detection, falsePos] = compare(avsdata, eventdata, eventVec, cell2mat(peakVector), param);
+                [detection, falsePos] = compare(avsdata, eventdata, eventVec, (peakVector), param);
                 temp(j)= (~isnan(detection.startdiff)*~isnan(detection.stopdiff));
             end
             Detect(l,k) = mean(temp);
