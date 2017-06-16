@@ -20,6 +20,7 @@ function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
     longend = long;
     shortbegin = long;
     shortend = long + short;
+    FFTsize = DSPparam.FFTsize;
     RMSSTA = rms(P(shortbegin:shortend));
     RMSLTA = rms(P(1:longend));
     MSSTA = RMSSTA^2;
@@ -67,11 +68,11 @@ function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
         if event
             if ~k   
                 %%[eevent, highPeaks, event] = duringEvent(P(index:index+short), RMSSTA, MSSTA, DSPparam, threshold); 
-                sample = filter(antinoise, P(index:index+short));
+                sample = filter(antinoise, P(index:index+FFTsize-1));
                 freqSample = abs(fft(sample));
                 freqSample = freqSample(1 : floor(length(sample)/2));
                 sampleMean = mean(freqSample);
-                highPeaks = (find(freqSample > sampleMean*freqFac)-1)*Fs/short;
+                highPeaks = (find(freqSample > sampleMean*freqFac)-1)*Fs/FFTsize;
 
                 % highPeaks = highPeaks(highPeaks > 500);
                 % event end decision
@@ -83,7 +84,7 @@ function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
                     eevent = 0;
                 end
                 %%
-                k = short -1;
+                k = FFTsize;
                 [peakMatrix, peakVector] = peakUpdate(peakMatrix, peakVector, highPeaks, index);
                 eventVec(index) = eventVec(index) + eevent;
             else
