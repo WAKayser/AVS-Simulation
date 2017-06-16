@@ -4,19 +4,19 @@ function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
      
     event = 0;
     eventVec = zeros(size(P, 1), 1);
-    midFreqEst = [];
     peakVector = [];
     peakMatrix = zeros(size(P, 1), 1);
-    timeStamp = [];
     threshold = 0;
     triggerCount = 0;
     % Window and sample initialization
     long = DSPparam.long;
     short = DSPparam.short;
     stFac = DSPparam.stFac;
+    endFac = DSPparam.endFac;
+    freqFac = DSPparam.freqFac;
+    Fs = DSPparam.Fs;
     trig = DSPparam.trig;
-    %load('antinoise.mat')
-    longbegin = 1;
+    load('antinoise.mat')
     longend = long;
     shortbegin = long;
     shortend = long + short;
@@ -66,7 +66,23 @@ function [eventVec, peakMatrix, peakVector] = avsdspmodule(P, A, DSPparam)
         end
         if event
             if ~k   
-                [eevent, highPeaks, event] = duringEvent(P(index:index+short), RMSSTA, MSSTA, DSPparam, threshold); 
+                %%[eevent, highPeaks, event] = duringEvent(P(index:index+short), RMSSTA, MSSTA, DSPparam, threshold); 
+                sample = filter(antinoise, P(index:index+short));
+                freqSample = abs(fft(sample));
+                freqSample = freqSample(1 : floor(length(sample)/2));
+                sampleMean = mean(freqSample);
+                highPeaks = (find(freqSample > sampleMean*freqFac)-1)*Fs/short;
+
+                % highPeaks = highPeaks(highPeaks > 500);
+                % event end decision
+                if (RMSSTA < threshold * endFac)
+                    event = 0;
+                    eevent = -0.1;          % x end event
+                else 
+                    event = 1;
+                    eevent = 0;
+                end
+                %%
                 k = short -1;
                 [peakMatrix, peakVector] = peakUpdate(peakMatrix, peakVector, highPeaks, index);
                 eventVec(index) = eventVec(index) + eevent;

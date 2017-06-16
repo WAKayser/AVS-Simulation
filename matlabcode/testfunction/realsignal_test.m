@@ -7,8 +7,8 @@ Reference = load('Ref.mat');
 %Metal60 = daqread('Metal_DOA60_10s.2.daq');
 %Impulse45 = daqread('Impulse_DOAneg45_10s.1.daq');
 %Drone90 = daqread('Drone_DOA90_10s.1.daq');
-Droneheenweer = daqread('Droneflying_heenweer_30s.1.daq');
-%Sweep2k3k45 = daqread('Sweep2k_3k_DOAneg45_30s.1.daq');
+%Droneheenweer = daqread('Droneflying_heenweer_30s.1.daq');
+Sweep2k3k45 = daqread('Sweep2k_3k_DOAneg45_30s.1.daq');
 %sin5k60 = daqread('Sinus_5k_DOAneg60_10s.1.daq');
 %%FILT
 
@@ -33,10 +33,7 @@ DSPparam.freqFac = 7;                           % used for detecting peaks
 param.start = 400;      % Error margin on start time
 param.stop = 2000;       % Error margin on stop time
 param.freq = DSPparam.Fs/DSPparam.short;        % Error margin on signal frequency
-    
-eventVec=[];
-peakMatrix=[];
-timeStamp=[];
+param.Fs =  48000;
 
 %%
 %

@@ -5,7 +5,7 @@ function [detection, falsePos]=compare(avsdata, eventdata, eventVec, peakVector,
     detectStop=[];
     detectStart = (find (eventVec == 0.1))./Fs;
     detectStop = (find (eventVec == -0.1))./Fs;
-    detectFreq = sort(peakVector);
+    detectFreq = cell2mat(peakVector);
     detection = [];
     falsePos.start = 0;
     falsePos.freq = 0;

@@ -1,4 +1,4 @@
-function [eventVec, highPeaks, startEvent] = duringEvent(sample, RMSSTA, MSSTA, DSPparam, threshold)
+function [eevent, highPeaks, event] = duringEvent(sample, RMSSTA, DSPparam, threshold)
 % Estimates frequency components when an event is detected.
     load('antinoise.mat')
     sample = filter(antinoise, sample);
@@ -10,11 +10,11 @@ function [eventVec, highPeaks, startEvent] = duringEvent(sample, RMSSTA, MSSTA, 
     % highPeaks = highPeaks(highPeaks > 500);
     % event end decision
     if (RMSSTA < threshold * DSPparam.endFac)
-        startEvent = 0;
-        eventVec = -0.1;          % x end event
+        event = 0;
+        eevent = -0.1;          % x end event
     else 
-        startEvent = 1;
-        eventVec = 0;
+        event = 1;
+        eevent = 0;
     end
 
 end

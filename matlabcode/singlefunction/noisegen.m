@@ -8,8 +8,7 @@ function [ N ] = noisegen(Z, dB, version)
 %   the third dimension will be the index of the AVS
 
 %	Should we extend the simulation to take into account correlated noise?
-    noisecolor = load('noisecolor.mat');
-    noisecolor = noisecolor.noisecolor;
+    load('noisecolor.mat');
 
     if nargin == 2
         version = 1;
